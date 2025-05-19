@@ -25,6 +25,36 @@ API desenvolvida em ASP.NET Core que consome dados fiscais de um banco de dados,
    - Crie o banco MySQL com as tabelas: `Usuarios`, `Notas`, `Itens`.
    - Atualize a connection string no `appsettings.json`.
 
+## Estrutura do Banco de Dados
+
+As tabelas foram criadas com base na seguinte estrutura:
+
+### Tabela `Notas`
+
+```sql
+CREATE TABLE Notas (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    CnpjEmitente VARCHAR(18) NOT NULL,
+    DataEmissao DATETIME NOT NULL
+);
+```
+
+### Tabela `Itens`
+
+```sql
+CREATE TABLE Itens (
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    NotaId INT NOT NULL,
+    NomeItem VARCHAR(255) NOT NULL,
+    Quantidade INT NOT NULL,
+    ValorUnitario DECIMAL(18,2) NOT NULL,
+    ImpostoItem DECIMAL(18,2) NOT NULL,
+    FOREIGN KEY (NotaId) REFERENCES Notas(Id)
+);
+```
+
+Essas tabelas representam uma relação de um-para-muitos, onde uma nota fiscal pode conter vários itens.
+
    ```json
    "ConnectionStrings": {
      "DefaultConnection": "Server=localhost;Database=tributo_db;User=root;Password=1234;"
@@ -87,9 +117,34 @@ API desenvolvida em ASP.NET Core que consome dados fiscais de um banco de dados,
 
 ---
 
-### Requisição de interpretação (POST):
+### 📤 Upload de Arquivo CSV
 
-**Endpoint:** `/api/relatorio/interpretar`
+**POST** `/api/Arquivo/upload`
+
+- Tipo: `multipart/form-data`
+- Campo: `file` (selecione um `.csv` válido)
+
+---
+
+### 📈 Estatísticas Consolidadas
+
+**GET** `/api/Relatorio/estatisticas`
+
+> Retorna total de notas, total de itens, valor total e imposto total.
+
+---
+
+### 📊 Relatório Detalhado
+
+**GET** `/api/Relatorio/detalhado`
+
+> Lista todas as notas fiscais processadas com CNPJ, valor, imposto, etc.
+
+---
+
+### 🧠 Gerar Insights com IA
+
+**POST:** `/api/relatorio/interpretar`
 
 **Headers:**
 ```
@@ -124,4 +179,4 @@ Content-Type: application/json
 
 ## 📌 Autor
 
-Kristian – Desenvolvedor FullStack | [LinkedIn](https://www.linkedin.com)
+Kristian – Desenvolvedor FullStack | [LinkedIn](https://www.linkedin.com/in/kristian-bernard/)
