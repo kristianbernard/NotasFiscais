@@ -32,25 +32,35 @@ As tabelas foram criadas com base na seguinte estrutura:
 ### Tabela `Notas`
 
 ```sql
-CREATE TABLE Notas (
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    CnpjEmitente VARCHAR(18) NOT NULL,
-    DataEmissao DATETIME NOT NULL
-);
+CREATE TABLE `db_tributojusto`.`tbl_notas_fiscais` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `Cnpj` VARCHAR(45) NULL,
+  `razao_social` VARCHAR(255) NULL,
+  `numero_nota` VARCHAR(45) NULL,
+  `data_emissao` DATE NULL,
+  PRIMARY KEY (`id`));
+
 ```
 
 ### Tabela `Itens`
 
 ```sql
-CREATE TABLE Itens (
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    NotaId INT NOT NULL,
-    NomeItem VARCHAR(255) NOT NULL,
-    Quantidade INT NOT NULL,
-    ValorUnitario DECIMAL(18,2) NOT NULL,
-    ImpostoItem DECIMAL(18,2) NOT NULL,
-    FOREIGN KEY (NotaId) REFERENCES Notas(Id)
-);
+CREATE TABLE `db_tributojusto`.`tbl_itens` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `codigo_item` VARCHAR(45) NULL,
+  `descricao_item` TEXT NULL,
+  `quantidade` INT NULL,
+  `valor_unitario` DECIMAL(18,2) NULL,
+  `imposto_item` DECIMAL(18,2) NULL,
+  `notas_id` INT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `id_idx` (`notas_id` ASC) VISIBLE,
+  CONSTRAINT `Id_NotasFiscais_Item`
+    FOREIGN KEY (`notas_id`)
+    REFERENCES `db_tributojusto`.`tbl_notas_fiscais` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
 ```
 
 Essas tabelas representam uma relação de um-para-muitos, onde uma nota fiscal pode conter vários itens.
