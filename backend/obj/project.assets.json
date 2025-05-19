@@ -3317,23 +3317,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\krist\\.nuget\\packages\\": {},
+    "C:\\Users\\julia\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Programas\\TributoJusto\\TributoJusto.csproj",
+      "projectUniqueName": "C:\\Users\\julia\\Documents\\programas\\NotasFiscais\\backend\\TributoJusto.csproj",
       "projectName": "TributoJusto",
-      "projectPath": "D:\\Programas\\TributoJusto\\TributoJusto.csproj",
-      "packagesPath": "C:\\Users\\krist\\.nuget\\packages\\",
-      "outputPath": "D:\\Programas\\TributoJusto\\obj\\",
+      "projectPath": "C:\\Users\\julia\\Documents\\programas\\NotasFiscais\\backend\\TributoJusto.csproj",
+      "packagesPath": "C:\\Users\\julia\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\julia\\Documents\\programas\\NotasFiscais\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\krist\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\julia\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3360,7 +3360,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -3410,7 +3410,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -93,71 +93,18 @@ namespace TributoJusto.Controllers
             });
         }
 
-        //[HttpPost("interpretar")]
-        //public async Task<IActionResult> InterpretarRelatorio()
-        //{
-        //    var resumo = new
-        //    {
-        //        TotalNotas = _context.Notas.Count(),
-        //        TotalItens = _context.Itens.Count(),
-        //        ImpostoTotal = _context.Itens.Sum(i => i.imposto_item),
-        //        ValorTotal = _context.Itens.Sum(i => i.quantidade * i.valor_unitario)
-        //    };
-
-        //    var prompt = $"Explique esses dados fiscais de forma analítica: " +
-        //                 $"Total de Notas: {resumo.TotalNotas}, " +
-        //                 $"Total de Itens: {resumo.TotalItens}, " +
-        //                 $"Valor Total: {resumo.ValorTotal:n2}, " +
-        //                 $"Imposto Total: {resumo.ImpostoTotal:n2}.";
-
-        //    var endpoint = _config["AzureOpenAI:Endpoint"];
-        //    var apiKey = _config["AzureOpenAI:ApiKey"];
-        //    var deploymentName = _config["AzureOpenAI:DeploymentName"];
-
-        //    var url = $"{endpoint}openai/deployments/{deploymentName}/chat/completions?api-version=2023-03-15-preview";
-
-        //    var requestBody = new
-        //    {
-        //        messages = new[]
-        //        {
-        //        new { role = "system", content = "Você é um analista fiscal que escreve resumos objetivos de dados fiscais." },
-        //        new { role = "user", content = prompt }
-        //    }
-        //    };
-
-        //    var json = JsonSerializer.Serialize(requestBody);
-        //    var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-        //    _httpClient.DefaultRequestHeaders.Clear();
-        //    _httpClient.DefaultRequestHeaders.Add("api-key", apiKey);
-
-        //    var response = await _httpClient.PostAsync(url, httpContent);
-        //    if (!response.IsSuccessStatusCode)
-        //        return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
-
-        //    var responseContent = await response.Content.ReadAsStringAsync();
-
-        //    using var doc = JsonDocument.Parse(responseContent);
-        //    var chatResponse = doc.RootElement
-        //        .GetProperty("choices")[0]
-        //        .GetProperty("message")
-        //        .GetProperty("content")
-        //        .GetString();
-
-        //    return Ok(new
-        //    {
-        //        Resumo = resumo,
-        //        Interpretacao = chatResponse
-        //    });
-        //}
 
 
         [HttpPost("interpretar")]
         public async Task<IActionResult> InterpretarRelatorio([FromBody] PerguntaRequest request)
         {
-            // Consultar dados do banco
-            var dadosPorCnpjRaw = await _context.Notas
+            // Buscar todas as notas com os itens no banco e processar depois
+            var notas = await _context.Notas
                 .Include(n => n.Itens)
+                .ToListAsync();
+
+            // Agrupar e processar os dados em memória (evita erros de cast do EF)
+            var dadosPorCnpjRaw = notas
                 .GroupBy(n => n.Cnpj)
                 .Select(g => new
                 {
@@ -165,9 +112,9 @@ namespace TributoJusto.Controllers
                     TotalNotas = g.Count(),
                     Itens = g.SelectMany(n => n.Itens).ToList()
                 })
-                .ToListAsync();
+                .ToList();
 
-            // Processar após carregar para garantir conversão decimal correta
+            // Processar os dados com conversão decimal correta
             var dadosPorCnpj = dadosPorCnpjRaw.Select(g => new
             {
                 g.Cnpj,
@@ -183,7 +130,7 @@ namespace TributoJusto.Controllers
                 }).ToList()
             }).ToList();
 
-            // Montar resumo geral (totais globais)
+            // Resumo geral
             var resumo = new
             {
                 TotalNotas = dadosPorCnpj.Sum(c => c.TotalNotas),
@@ -192,7 +139,7 @@ namespace TributoJusto.Controllers
                 ImpostoTotal = dadosPorCnpj.Sum(c => c.ImpostoTotal)
             };
 
-            // Construir o prompt completo passando dados detalhados para IA
+            // Montar prompt para IA
             var promptBuilder = new StringBuilder();
             promptBuilder.AppendLine($"Resumo geral: Total Notas: {resumo.TotalNotas}, Total Itens: {resumo.TotalItens}, Valor Total: {resumo.ValorTotal:n2}, Imposto Total: {resumo.ImpostoTotal:n2}.");
             promptBuilder.AppendLine("Dados detalhados por CNPJ:");
@@ -209,7 +156,7 @@ namespace TributoJusto.Controllers
 
             var prompt = promptBuilder.ToString();
 
-            // Preparar chamada Azure OpenAI
+            // Preparar chamada para Azure OpenAI
             var endpoint = _config["AzureOpenAI:Endpoint"];
             var apiKey = _config["AzureOpenAI:ApiKey"];
             var deploymentName = _config["AzureOpenAI:DeploymentName"];
@@ -256,6 +203,7 @@ namespace TributoJusto.Controllers
         {
             public string Pergunta { get; set; }
         }
+
 
 
 

@@ -49,7 +49,7 @@ CREATE TABLE `db_tributojusto`.`tbl_itens` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `codigo_item` VARCHAR(45) NULL,
   `descricao_item` TEXT NULL,
-  `quantidade` INT NULL,
+  `quantidade` DECIMAL (10,2) NULL,
   `valor_unitario` DECIMAL(18,2) NULL,
   `imposto_item` DECIMAL(18,2) NULL,
   `notas_id` INT NULL,
