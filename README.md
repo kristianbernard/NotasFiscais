@@ -25,7 +25,7 @@ API desenvolvida em ASP.NET Core que consome dados fiscais de um banco de dados,
    - Crie o banco MySQL com as tabelas: `Usuarios`, `Notas`, `Itens`.
    - Atualize a connection string no `appsettings.json`.
 
-## Estrutura do Banco de Dados
+**Estrutura do Banco de Dados**
 
 As tabelas foram criadas com base na seguinte estrutura:
 
