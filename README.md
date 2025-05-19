@@ -1,101 +1,127 @@
-# Desafio Técnico – Desenvolvedor(a) Pleno (Fullstack)
+# 🧠 TributoJusto – Backend
 
-## 🎯 Objetivo Geral
-
-Construir uma aplicação fullstack (API + front-end) para carga e análise de dados fiscais a partir de arquivos `.csv`, com geração de relatórios e insights automatizados.
+API desenvolvida em ASP.NET Core que consome dados fiscais de um banco de dados, analisa com Azure OpenAI e responde perguntas com base em informações reais extraídas de arquivos CSV e armazenadas em banco.
 
 ---
 
-## 📂 Arquivo de entrada
+## 🚀 Instruções de Execução
 
-Formato `.csv` com os seguintes campos:
+### Pré-requisitos:
 
-```csv
-cnpj, razao_social, numero_nota, data_emissao, codigo_item, descricao_item, quantidade, valor_unitario, imposto_item
+- .NET 8 SDK
+- MySQL instalado e configurado
+- Docker (se quiser rodar MySQL via container)
+- Azure OpenAI configurado com API Key válida
+
+### Passos:
+
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/seuusuario/tributo-justo-backend.git
+   cd tributo-justo-backend
+   ```
+
+2. **Configure o banco:**
+   - Crie o banco MySQL com as tabelas: `Usuarios`, `Notas`, `Itens`.
+   - Atualize a connection string no `appsettings.json`.
+
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Server=localhost;Database=tributo_db;User=root;Password=1234;"
+   }
+   ```
+
+3. **Configure a API do Azure OpenAI:**
+   No `appsettings.json`:
+   ```json
+   "AzureOpenAI": {
+     "Endpoint": "https://SEU-ENDPOINT.openai.azure.com/",
+     "Key": "SUA-API-KEY",
+     "DeploymentName": "gpt-35-turbo"
+   }
+   ```
+
+4. **Rode o projeto:**
+   ```bash
+   dotnet build
+   dotnet run
+   ```
+
+   A API será iniciada em: `https://localhost:5133`
+
+---
+
+## ⚙️ Decisões Técnicas
+
+- **ASP.NET Core Web API**: arquitetura limpa, escalável, ideal para microserviços.
+- **Entity Framework Core + MySQL**: ORM para mapeamento objeto-relacional.
+- **JWT Auth**: autenticação segura para proteger endpoints.
+- **Azure OpenAI**: análise inteligente dos dados para responder perguntas complexas.
+- **Separação de camadas**:
+  - `Controllers`: interface pública da API.
+  - `Models`: representação do banco de dados.
+  - `Data`: contexto de persistência.
+
+---
+
+## 🧪 Como Testar
+
+### Requisição de login (POST):
+
+**Endpoint:** `/api/auth/login`
+
+**Body:**
+```json
+{
+  "username": "usuario",
+  "password": "senha"
+}
+```
+
+**Resposta:**
+```json
+{
+  "token": "JWT-AQUI"
+}
 ```
 
 ---
 
-## 🧱 Escopo da Solução
+### Requisição de interpretação (POST):
 
-### 🔧 1. Back-end (Python FastAPI, Flask ou C# ASP.NET Core)
+**Endpoint:** `/api/relatorio/interpretar`
 
-#### Funcionalidades obrigatórias:
-- Upload de arquivo CSV
-- Persistência em banco relacional (SQLite, PostgreSQL)
+**Headers:**
+```
+Authorization: Bearer SEU_TOKEN_JWT
+Content-Type: application/json
+```
 
-#### Regras de negócio:
-- valor_total da nota = soma de (quantidade × valor_unitario)
-- imposto_recolhido da nota = soma de imposto_item
+**Body:**
+```json
+{
+  "pergunta": "Qual o item mais caro?"
+}
+```
 
-
----
-
-### 📊 2. API REST – Endpoints obrigatórios
-
-- POST /upload – upload e processamento do arquivo
-- GET /relatorio – total de impostos por CNPJ, média da diferença
-- GET /alertas – notas com diferença superior a 50%
-- GET /estatisticas – KPIs gerais
-- POST /auth/login e /auth/register – autenticação com JWT
-- POST /relatorio/interpretar – (extra) integração com LLM
-
----
-
-### 💻 3. Front-end (React ou equivalente)
-
-#### Telas obrigatórias:
-- Login e registro
-- Upload de arquivo CSV
-- Visualização de relatório com filtros
-- Tela de alertas
-- Tela de estatísticas
-- Botão para “Gerar Insight com IA” (extra)
+**Resposta esperada:**
+```json
+{
+  "resposta": "Com base nos dados disponíveis, o item mais caro é: Notebook Dell R$ 14.500,00"
+}
+```
 
 ---
 
-## 🤖 Integração com LLM (extra)
-
-> Criar um endpoint `/relatorio/interpretar` que use a API do OpenAI ou HuggingFace para gerar um texto como:
-
-> “A empresa X apresentou recolhimento médio de 14% no período. Nota 2023 teve recolhimento abaixo da média para o NCM 1234.”
-
----
-
-## 🛠️ Tecnologias sugeridas
-
-- Back-end: Python (FastAPI/Flask) ou C# .NET
-- Front-end: React ou VueJs
-- Banco de dados: PostgreSQL, MySql ou SQLite
-- Outros: Docker (desejável), Swagger/Postman, CI opcional
+### Dica:
+- Use o **Postman** ou o **Thunder Client (VSCode)** pra testar os endpoints.
+- Faça perguntas variadas:  
+  - “Qual CNPJ teve mais notas?”  
+  - “Qual o total de impostos pagos?”  
+  - “Qual o item mais vendido?”
 
 ---
 
-## ✅ Critérios de Avaliação
+## 📌 Autor
 
-| Critério                             | Peso |
-|-------------------------------------|------|
-| Modelagem de dados relacional       | Alto |
-| Clareza na arquitetura do código    | Alto |
-| Cobertura e qualidade de testes     | Médio |
-| Uso adequado de REST e JWT          | Alto |
-| Filtros funcionais e bem implementados | Médio |
-| Responsividade e usabilidade básica | Médio |
-| Integração front-back               | Médio |
-| (Opcional) Criatividade com LLM     | Bônus |
-
----
-
-## 📦 Entrega
-
-- Faça um fork deste repositório
-  - /backend
-  - /frontend
-  - /dados (CSV de exemplo)
-- README.md com:
-  - Instruções de execução
-  - Decisões técnicas
-  - Como testar
-- Prazo: até 3 dias após o recebimento
-- Enviar para: marcio.faria@tributojusto.com.br com o assunto:
-  Entrega Desafio Técnico – Pleno – [Seu Nome]
+Kristian – Desenvolvedor FullStack | [LinkedIn](https://www.linkedin.com)
