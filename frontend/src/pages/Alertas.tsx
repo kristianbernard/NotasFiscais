@@ -157,7 +157,7 @@ const Alertas = () => {
                         <td>{item.numeroNota}</td>
                         <td>{formatCurrency(item.valorTotal)}</td>
                         <td>{formatCurrency(item.impostoTotal)}</td>
-                        <td>{formatCurrency(item.diferenca)}</td>
+                        <td>{item.diferenca}% </td>
                       </tr>
                     ))
                   ) : (

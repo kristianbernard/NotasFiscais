@@ -134,8 +134,9 @@ export default function Relatorio() {
               {dados.map((item, index) => (
                 <tr key={index}>
                   <td>{item.cnpj}</td>
-                  <td>R$ {item.totalImpostos?.toFixed(2) ?? "0,00"}</td>
-                  <td>R$ {item.mediaDiferenca?.toFixed(2) ?? "0,00"}</td>
+                  <td>{item.totalImpostos != null ? item.totalImpostos.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "R$ 0,00"}</td>
+                  <td>{item.mediaDiferenca != null ? item.mediaDiferenca.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "R$ 0,00"}</td>
+
                 </tr>
               ))}
             </tbody>

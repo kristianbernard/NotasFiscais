@@ -32,7 +32,7 @@ const Insight = () => {
       }
 
       const data = await res.json();
-      setResposta(data.Interpretacao || "Sem resposta da IA");
+      setResposta(data.interpretacao || "Sem resposta da IA");
     } catch (e: any) {
       setError(e.message);
     } finally {

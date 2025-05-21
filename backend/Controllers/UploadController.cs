@@ -38,7 +38,7 @@ namespace TributoJusto.Controllers
                 {
                     var nota = new notasFiscais
                     {
-                        Cnpj = col[0],
+                        Cnpj = col[0], 
                         razao_social = col[1],
                         numero_nota = numeroNota,
                         data_emissao = DateTime.Parse(col[3]),

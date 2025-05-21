@@ -56,14 +56,14 @@ namespace TributoJusto.Controllers
             var alertas = _context.Notas
                 .Include(n => n.Itens)
                 .Where(n =>
-                    Math.Abs(n.Itens.Sum(i => i.quantidade * i.valor_unitario) - n.Itens.Sum(i => i.imposto_item)) > 50)
+                    Math.Abs(n.Itens.Sum(i => i.imposto_item) / (n.Itens.Sum(i => i.quantidade * i.valor_unitario))) > 0.5m)
                 .Select(n => new
                 {
                     n.numero_nota,
                     n.Cnpj,
                     ValorTotal = n.Itens.Sum(i => i.quantidade * i.valor_unitario),
                     ImpostoTotal = n.Itens.Sum(i => i.imposto_item),
-                    Diferenca = Math.Abs(n.Itens.Sum(i => i.quantidade * i.valor_unitario) - n.Itens.Sum(i => i.imposto_item))
+                    Diferenca = Math.Abs(n.Itens.Sum(i => i.imposto_item) / (n.Itens.Sum(i => i.quantidade * i.valor_unitario))) * 100
                 })
                 .ToList();
 
@@ -76,10 +76,22 @@ namespace TributoJusto.Controllers
         public IActionResult GetEstatisticas()
         {
             var totalNotas = _context.Notas.Count();
-            var totalItens = _context.Itens.Count();
-            var valorTotal = _context.Itens.Sum(i => i.quantidade * i.valor_unitario);
-            var impostoTotal = _context.Itens.Sum(i => i.imposto_item);
-            var mediaImposto = _context.Itens.Average(i => i.imposto_item);
+            var totalItens = 0;
+            var valorTotal = 0.0m;
+            var impostoTotal = 0.0m;
+            var mediaImposto = 0.0m;
+
+            if (totalNotas > 0)
+            {
+                 totalItens = _context.Itens.Count();
+                 valorTotal = _context.Itens.Sum(i => i.quantidade * i.valor_unitario);
+                 impostoTotal = _context.Itens.Sum(i => i.imposto_item);
+                 mediaImposto = _context.Itens.Average(i => i.imposto_item);
+            }
+
+
+            
+
 
             return Ok(new
             {
