@@ -16,7 +16,7 @@ const Insight = () => {
     setResposta(null);
 
     try {
-      const res = await fetch("http://localhost:5133/interpretar", {
+      const res = await fetch("http://localhost:5133/relatorio/interpretar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

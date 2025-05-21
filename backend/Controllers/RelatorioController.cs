@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using OpenAI_API;
 using TributoJusto.Data;
-using OpenAI_API;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text;
