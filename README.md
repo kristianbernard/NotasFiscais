@@ -1,4 +1,4 @@
-# 🧠 TributoJusto – Backend
+# 🧠 NotasFiscais – Backend
 
 API desenvolvida em ASP.NET Core que consome dados fiscais de um banco de dados, analisa com Azure OpenAI e responde perguntas com base em informações reais extraídas de arquivos CSV e armazenadas em banco.
 
