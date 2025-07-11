@@ -17,8 +17,8 @@ API desenvolvida em ASP.NET Core que consome dados fiscais de um banco de dados,
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/seuusuario/tributo-justo-backend.git
-   cd tributo-justo-backend
+   git clone https://github.com/kristianbernard/NotasFiscais.git
+   cd tributos
    ```
 
 2. **Configure o banco:**
@@ -32,7 +32,7 @@ As tabelas foram criadas com base na seguinte estrutura:
 ### Tabela `Notas`
 
 ```sql
-CREATE TABLE `db_tributojusto`.`tbl_notas_fiscais` (
+CREATE TABLE `db_tributo`.`tbl_notas_fiscais` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `Cnpj` VARCHAR(45) NULL,
   `razao_social` VARCHAR(255) NULL,
@@ -45,7 +45,7 @@ CREATE TABLE `db_tributojusto`.`tbl_notas_fiscais` (
 ### Tabela `Itens`
 
 ```sql
-CREATE TABLE `db_tributojusto`.`tbl_itens` (
+CREATE TABLE `db_tributos`.`tbl_itens` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `codigo_item` VARCHAR(45) NULL,
   `descricao_item` TEXT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE `db_tributojusto`.`tbl_itens` (
   INDEX `id_idx` (`notas_id` ASC) VISIBLE,
   CONSTRAINT `Id_NotasFiscais_Item`
     FOREIGN KEY (`notas_id`)
-    REFERENCES `db_tributojusto`.`tbl_notas_fiscais` (`id`)
+    REFERENCES `db_tributos`.`tbl_notas_fiscais` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
